@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TXT ke VCF - Kang CV</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #2c2f33;
+      color: white;
+      padding: 20px;
+    }
+    .box {
+      max-width: 600px;
+      margin: auto;
+      background: #23272a;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+    }
+    textarea {
+      height: 250px;
+    }
+    button {
+      background: #7289da;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <h2>TXT ➜ VCF (Kang CV)</h2>
+
+    <input type="file" id="fileInput">
+
+    <label>Pisah file Admin?</label>
+    <select id="mode">
+      <option value="gabung">Gabung semua</option>
+      <option value="pisah">Pisah Admin/Navy</option>
+    </select>
+
+    <input type="text" id="adminName" placeholder="Nama Admin">
+    <input type="text" id="navyName" placeholder="Nama Navy">
+    <input type="text" id="anggotaName" placeholder="Nama Anggota">
+    <input type="text" id="filename" placeholder="Nama File">
+
+    <textarea id="text"></textarea>
+
+    <button onclick="convert()">Convert ke VCF</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
