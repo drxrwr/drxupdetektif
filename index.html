@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TXT ke VCF - Kang CV</title>
+  <title>TXT ke VCF</title>
 
   <style>
     body {
@@ -19,7 +19,7 @@
       padding: 20px;
       border-radius: 10px;
     }
-    input, textarea, button {
+    input, textarea, button, select {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -39,7 +39,7 @@
 
 <body>
   <div class="box">
-    <h2>TXT ➜ VCF (Kang CV)</h2>
+    <h2>TXT ➜ VCF</h2>
 
     <input type="file" id="fileInput">
 
@@ -48,6 +48,14 @@
       <option value="gabung">Gabung semua</option>
       <option value="pisah">Pisah Admin/Navy</option>
     </select>
+
+    <!-- NOMOR TAMBAHAN -->
+    <label>Nomor Tambahan (Admin/Navy)</label>
+    <textarea id="extraNumbers" style="height:120px;" placeholder="contoh:
+admin
+628xxxx
+navy
+628xxxx"></textarea>
 
     <input type="text" id="adminName" placeholder="Nama Admin">
     <input type="text" id="navyName" placeholder="Nama Navy">
