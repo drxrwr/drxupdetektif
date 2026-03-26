@@ -2,20 +2,16 @@
 function formatPhoneNumber(input) {
   let number = input.trim();
 
-  // Hapus selain angka dan +
   number = number.replace(/[^0-9+]/g, '');
 
-  // 0 ➜ +62
   if (number.startsWith('0')) {
     number = '+62' + number.slice(1);
   }
 
-  // Tambah + kalau belum ada
   if (!number.startsWith('+')) {
     number = '+' + number;
   }
 
-  // Validasi min 10 digit
   const digits = number.replace(/\D/g, '');
   if (digits.length < 10) return null;
 
@@ -34,6 +30,8 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 // CONVERT
 function convert() {
   const text = document.getElementById('text').value.trim();
+  const extra = document.getElementById('extraNumbers').value.trim();
+
   const adminName = document.getElementById('adminName').value || 'ADMIN';
   const navyName = document.getElementById('navyName').value || 'NAVY';
   const anggotaName = document.getElementById('anggotaName').value || 'ANGGOTA';
@@ -46,36 +44,49 @@ function convert() {
   }
 
   const lines = text.split('\n');
+
   let current = anggotaName;
-  let index = 1;
+
+  let adminIndex = 1;
+  let navyIndex = 1;
+  let anggotaIndex = 1;
 
   let adminVcf = '';
   let anggotaVcf = '';
 
-  lines.forEach(line => {
+  let hasNavy = false;
+
+  function processLine(line) {
     let l = line.trim().toLowerCase();
 
-    // DETEKSI KATEGORI
     if (l === 'admin') {
       current = adminName;
-      index = 1;
       return;
     }
     if (l === 'navy') {
       current = navyName;
-      index = 1;
+      hasNavy = true;
       return;
     }
     if (l === 'anggota') {
       current = anggotaName;
-      index = 1;
       return;
     }
 
     if (!line.trim()) return;
 
     let phone = formatPhoneNumber(line);
-    if (!phone) return; // skip invalid
+    if (!phone) return;
+
+    let index;
+
+    if (current === adminName) {
+      index = adminIndex++;
+    } else if (current === navyName) {
+      index = navyIndex++;
+    } else {
+      index = anggotaIndex++;
+    }
 
     const vcf =
 `BEGIN:VCARD
@@ -91,15 +102,30 @@ END:VCARD
     } else {
       anggotaVcf += vcf;
     }
+  }
 
-    index++;
-  });
+  // DATA UTAMA
+  lines.forEach(processLine);
+
+  // DATA TAMBAHAN (lanjut index, bukan reset)
+  if (extra) {
+    const extraLines = extra.split('\n');
+    extraLines.forEach(processLine);
+  }
+
+  // NAMA FILE BARU
+  let adminFileName = '';
+  if (hasNavy) {
+    adminFileName = `ADMIN NAVY ${filename}.vcf`;
+  } else {
+    adminFileName = `ADMIN ${filename}.vcf`;
+  }
 
   // DOWNLOAD
   if (mode === 'pisah') {
 
     if (adminVcf) {
-      download(adminVcf, filename + '_admin.vcf');
+      download(adminVcf, adminFileName);
     }
 
     if (anggotaVcf) {
@@ -111,7 +137,7 @@ END:VCARD
   }
 }
 
-// DOWNLOAD FUNCTION
+// DOWNLOAD
 function download(content, filename) {
   const blob = new Blob([content], { type: 'text/vcard' });
   const url = URL.createObjectURL(blob);
